@@ -1,11 +1,12 @@
 import axios from "axios";
 
-// ✅ baseURL (local + deploy support)
+// ✅ API Base URL
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL:
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
-// 🔐 Token auto attach
+// ✅ Auto attach token
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
 
@@ -16,7 +17,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// ❌ Optional: handle token error globally
+// ✅ Global auth error handling
 API.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -24,6 +25,7 @@ API.interceptors.response.use(
       localStorage.removeItem("token");
       window.location = "/";
     }
+
     return Promise.reject(err);
   }
 );

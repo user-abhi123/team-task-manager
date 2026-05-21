@@ -2,13 +2,20 @@
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
+
+  "engines": {
+    "node": "20.x"
+  },
+
   "type": "module",
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
+
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "axios": "^1.16.0",
@@ -16,6 +23,7 @@
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"
   },
+
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.2.4",

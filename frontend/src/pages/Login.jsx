@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
+
       localStorage.setItem("token", res.data.token);
+
       navigate("/dashboard");
     } catch (err) {
       alert("Login failed");
@@ -20,7 +26,9 @@ export default function Login() {
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-lg w-80">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Login
+        </h2>
 
         <input
           className="w-full border p-2 mb-3 rounded"
@@ -41,6 +49,17 @@ export default function Login() {
         >
           Login
         </button>
+
+        {/* REGISTER LINK */}
+        <p className="text-center mt-4 text-sm">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-500 font-semibold"
+          >
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

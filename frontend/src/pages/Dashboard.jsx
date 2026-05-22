@@ -14,7 +14,7 @@ export default function Dashboard() {
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
-
+  const [projectName, setProjectName] = useState("");
   // ================= ATTENDANCE LOAD =================
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -87,6 +87,26 @@ export default function Dashboard() {
     const res = await API.get("/tasks");
     setTasks(res.data);
   };
+
+  const handleCreateProject = async () => {
+  if (!projectName) {
+    return alert("Project name required");
+  }
+
+  try {
+    await API.post("/projects", {
+      name: projectName,
+    });
+
+    setProjectName("");
+
+    fetchProjects();
+
+    alert("Project created");
+  } catch (err) {
+    alert("Project creation failed");
+  }
+};
 
   // ================= TASK CREATE =================
   const handleCreateTask = async () => {

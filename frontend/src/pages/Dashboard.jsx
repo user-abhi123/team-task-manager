@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [members, setMembers] = useState([]);
   const [tasks, setTasks] = useState([]);
 
+  const [projectName, setProjectName] = useState("");
+
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
@@ -53,7 +55,9 @@ export default function Dashboard() {
         }
 
       } catch (err) {
+
         console.log(err);
+
       }
     };
 
@@ -105,6 +109,7 @@ export default function Dashboard() {
 
     fetchProjects();
     fetchTasks();
+    fetchUsers();
 
   }, []);
 
@@ -118,11 +123,22 @@ export default function Dashboard() {
 
       setProjects(res.data);
 
-      // ================= USERS =================
+    } catch (err) {
 
-      const usersRes = await API.get("/auth/users");
+      console.log(err);
 
-      setMembers(usersRes.data);
+    }
+  };
+
+  // ================= FETCH USERS =================
+
+  const fetchUsers = async () => {
+
+    try {
+
+      const res = await API.get("/auth/users");
+
+      setMembers(res.data);
 
     } catch (err) {
 
@@ -144,6 +160,55 @@ export default function Dashboard() {
     } catch (err) {
 
       console.log(err);
+
+    }
+  };
+
+  // ================= CREATE PROJECT =================
+
+  const handleCreateProject = async () => {
+
+    if (!projectName) {
+
+      alert("Project name required");
+
+      return;
+    }
+
+    try {
+
+      await API.post("/projects", {
+        name: projectName,
+      });
+
+      setProjectName("");
+
+      fetchProjects();
+
+      alert("Project created");
+
+    } catch (err) {
+
+      alert("Project creation failed");
+
+    }
+  };
+
+  // ================= DELETE PROJECT =================
+
+  const handleDeleteProject = async (id) => {
+
+    try {
+
+      await API.delete(`/projects/${id}`);
+
+      fetchProjects();
+
+      alert("Project deleted");
+
+    } catch (err) {
+
+      alert("Delete failed");
 
     }
   };
@@ -287,6 +352,66 @@ export default function Dashboard() {
           </button>
 
         )}
+
+      </div>
+
+      {/* CREATE PROJECT */}
+
+      <div className="bg-gray-800 p-5 rounded mb-5">
+
+        <h2 className="text-white mb-3 font-bold">
+          Create Project
+        </h2>
+
+        <input
+          value={projectName}
+          onChange={(e) =>
+            setProjectName(e.target.value)
+          }
+          placeholder="Project Name"
+          className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+        />
+
+        <button
+          onClick={handleCreateProject}
+          className="bg-blue-500 px-4 py-2 rounded text-white"
+        >
+          Create Project
+        </button>
+
+      </div>
+
+      {/* PROJECT LIST */}
+
+      <div className="bg-gray-800 p-5 rounded mb-5">
+
+        <h2 className="text-white mb-3 font-bold">
+          Projects
+        </h2>
+
+        {projects.map((p) => (
+
+          <div
+            key={p._id}
+            className="flex justify-between items-center bg-gray-700 p-3 rounded mb-2"
+          >
+
+            <p className="text-white">
+              {p.name}
+            </p>
+
+            <button
+              onClick={() =>
+                handleDeleteProject(p._id)
+              }
+              className="bg-red-500 px-3 py-1 rounded text-white"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        ))}
 
       </div>
 

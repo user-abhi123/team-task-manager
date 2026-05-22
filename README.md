@@ -1,12 +1,19 @@
 # Team Task Manager
 
-A full-stack MERN project management web app where users can:
+Full-stack Team Task Manager web application built using MERN Stack.
 
-- Create projects
-- Assign tasks
-- Track task progress
-- Manage attendance
-- Role-based authentication (Admin/Member)
+## Features
+
+- Login / Register
+- Admin & Member Roles
+- Punch In / Punch Out Timer
+- Project Management
+- Create Project
+- Delete Project
+- Task Assignment
+- Task Status Update
+- Todo / In Progress / Done
+- Dashboard
 
 ## Tech Stack
 
@@ -20,26 +27,13 @@ Backend:
 - Express.js
 - MongoDB
 
-## Features
+## Live App
 
-- JWT Authentication
-- Project Management
-- Task Assignment
-- Attendance System
-- Dashboard Analytics
-- Role-Based Access Control
+Frontend:
+https://celebrated-light-production.up.railway.app/
 
-## Deployment
+Backend:
+https://team-task-manager-production-db67.up.railway.app/
 
-Frontend: Railway  
-Backend: Railway  
-Database: MongoDB Atlas / Railway MongoDB
-
-## Run Locally
-
-### Backend
-
-```bash
-cd backend
-npm install
-node server.js
+## GitHub Repository
+https://github.com/user-abhi123/team-task-manager

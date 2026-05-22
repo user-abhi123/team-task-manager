@@ -24,37 +24,53 @@ export default function Dashboard() {
   useEffect(() => {
 
     const fetchAttendance = async () => {
+
       try {
 
         const res = await API.get("/attendance/today");
 
         if (res.data) {
 
-          if (res.data.punchIn && !res.data.punchOut) {
+          if (
+            res.data.punchIn &&
+            !res.data.punchOut
+          ) {
 
             setRunning(true);
 
-            const start = new Date(res.data.punchIn);
+            const start = new Date(
+              res.data.punchIn
+            );
 
             setTime(
-              Math.floor((new Date() - start) / 1000)
+              Math.floor(
+                (new Date() - start) / 1000
+              )
             );
           }
 
           if (res.data.punchOut) {
 
-            const start = new Date(res.data.punchIn);
+            const start = new Date(
+              res.data.punchIn
+            );
 
-            const end = new Date(res.data.punchOut);
+            const end = new Date(
+              res.data.punchOut
+            );
 
             setTime(
-              Math.floor((end - start) / 1000)
+              Math.floor(
+                (end - start) / 1000
+              )
             );
           }
         }
 
       } catch (err) {
+
         console.log(err);
+
       }
     };
 
@@ -69,8 +85,11 @@ export default function Dashboard() {
     let interval;
 
     if (running) {
+
       interval = setInterval(() => {
+
         setTime((prev) => prev + 1);
+
       }, 1000);
     }
 
@@ -153,7 +172,9 @@ export default function Dashboard() {
   const handleCreateProject = async () => {
 
     if (!projectName) {
+
       return alert("Project name required");
+
     }
 
     try {
@@ -170,7 +191,29 @@ export default function Dashboard() {
 
     } catch (err) {
 
-      alert("Project creation failed");
+      alert(
+        err.response?.data?.msg ||
+        "Project creation failed"
+      );
+
+    }
+  };
+
+  // ================= DELETE PROJECT =================
+
+  const deleteProject = async (id) => {
+
+    try {
+
+      await API.delete(`/projects/${id}`);
+
+      fetchProjects();
+
+      alert("Project deleted");
+
+    } catch (err) {
+
+      alert("Delete failed");
 
     }
   };
@@ -179,7 +222,11 @@ export default function Dashboard() {
 
   const handleCreateTask = async () => {
 
-    if (!title || !projectId || !assignedTo) {
+    if (
+      !title ||
+      !projectId ||
+      !assignedTo
+    ) {
 
       alert("All fields required");
 
@@ -204,14 +251,20 @@ export default function Dashboard() {
 
     } catch (err) {
 
-      alert("Task creation failed");
+      alert(
+        err.response?.data?.msg ||
+        "Task creation failed"
+      );
 
     }
   };
 
   // ================= UPDATE STATUS =================
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (
+    id,
+    status
+  ) => {
 
     try {
 
@@ -243,7 +296,8 @@ export default function Dashboard() {
     } catch (err) {
 
       alert(
-        err.response?.data?.msg || "Punch In failed"
+        err.response?.data?.msg ||
+        "Punch In failed"
       );
     }
   };
@@ -261,7 +315,8 @@ export default function Dashboard() {
     } catch (err) {
 
       alert(
-        err.response?.data?.msg || "Punch Out failed"
+        err.response?.data?.msg ||
+        "Punch Out failed"
       );
     }
   };
@@ -270,11 +325,13 @@ export default function Dashboard() {
 
   const getColor = (status) => {
 
-    if (status === "done")
+    if (status === "done") {
       return "bg-green-500";
+    }
 
-    if (status === "in-progress")
+    if (status === "in-progress") {
       return "bg-yellow-500";
+    }
 
     return "bg-gray-600";
   };
@@ -339,6 +396,49 @@ export default function Dashboard() {
           Create Project
         </button>
 
+        {/* PROJECT LIST */}
+
+        <div className="mt-5">
+
+          <h3 className="text-white mb-2">
+            Projects
+          </h3>
+
+          {projects.length === 0 ? (
+
+            <p className="text-gray-400">
+              No projects
+            </p>
+
+          ) : (
+
+            projects.map((p) => (
+
+              <div
+                key={p._id}
+                className="flex justify-between items-center bg-gray-700 p-3 rounded mb-2"
+              >
+
+                <span className="text-white">
+                  {p.name}
+                </span>
+
+                <button
+                  onClick={() =>
+                    deleteProject(p._id)
+                  }
+                  className="bg-red-500 px-3 py-1 rounded text-white"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            ))
+          )}
+
+        </div>
+
       </div>
 
       {/* CREATE TASK */}
@@ -351,7 +451,9 @@ export default function Dashboard() {
 
         <input
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) =>
+            setTitle(e.target.value)
+          }
           placeholder="Task title"
           className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
         />
@@ -403,7 +505,7 @@ export default function Dashboard() {
               key={m._id}
               value={m._id}
             >
-              {m.name}
+              {m.name} ({m.role})
             </option>
 
           ))}
@@ -448,13 +550,13 @@ export default function Dashboard() {
                   {task.title}
                 </p>
 
-                <p className="text-sm">
+                <p className="text-sm text-white">
                   Project:
                   {" "}
                   {task.projectId?.name || "N/A"}
                 </p>
 
-                <p className="text-sm">
+                <p className="text-sm text-white">
                   Assigned:
                   {" "}
                   {task.user?.name || "N/A"}

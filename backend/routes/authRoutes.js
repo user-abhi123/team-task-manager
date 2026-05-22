@@ -1,13 +1,13 @@
 const router = require("express").Router();
 
-const jwt = require("jsonwebtoken");
-
 const User = require("../models/User");
 
 const {
   signup,
   login,
 } = require("../controllers/authController");
+
+const auth = require("../middleware/auth");
 
 
 // REGISTER
@@ -18,25 +18,10 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 
-// GET USERS
-router.get("/users", async (req, res) => {
+// GET ALL USERS
+router.get("/users", auth, async (req, res) => {
 
   try {
-
-    const token = req.header("Authorization");
-
-    if (!token) {
-      return res.status(401).json({
-        msg: "No token",
-      });
-    }
-
-    const actualToken = token.split(" ")[1];
-
-    jwt.verify(
-      actualToken,
-      process.env.JWT_SECRET
-    );
 
     const users = await User.find().select("-password");
 
@@ -47,11 +32,12 @@ router.get("/users", async (req, res) => {
     console.log(err);
 
     res.status(500).json({
-      msg: "Server error",
+      msg: "Server Error",
     });
 
   }
 
 });
+
 
 module.exports = router;

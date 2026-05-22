@@ -9,21 +9,22 @@ const {
 
 const auth = require("../middleware/auth");
 
+// ================= REGISTER =================
 
-// REGISTER
 router.post("/signup", signup);
 
+// ================= LOGIN =================
 
-// LOGIN
 router.post("/login", login);
 
+// ================= GET ALL USERS =================
 
-// GET ALL USERS
 router.get("/users", auth, async (req, res) => {
 
   try {
 
-    const users = await User.find().select("-password");
+    const users = await User.find()
+      .select("-password");
 
     res.json(users);
 
@@ -38,6 +39,5 @@ router.get("/users", auth, async (req, res) => {
   }
 
 });
-
 
 module.exports = router;
